@@ -107,8 +107,84 @@ Cеттер определяется после геттера.
 
 # 2. Наследование
 Наследование позволяет создавать новый класс на основе уже существующего класса.  
-Ключевыми понятиями наследования являются подкласс и суперкласс. Подкласс наследует от суперкласса все публичные атрибуты и методы. Суперкласс еще называется базовым (base class) или родительским (parent class), а подкласс - производным (derived class) или дочерним (child class).
+Ключевыми понятиями наследования являются подкласс и суперкласс. Подкласс наследует от суперкласса все публичные атрибуты и методы. Суперкласс еще называется базовым (base class) или родительским (parent class), а подкласс - производным (derived class) или дочерним (child class).  
 
+```python
+class Подкласс(Суперкласс):
+    # методы подкласса
+```
+Допустим, у нас есть класс `Person`, представляющий человека:
+
+```python
+class Person:
+    def __init__(self, name):
+        self.__name = name   # имя человека (приватное поле)
+
+    @property
+    def name(self):
+        return self.__name
+
+    def display_info(self):
+        print(f"Name: {self.__name}")
+```
+
+Теперь предположим, что нам нужен класс работника (`Employee`). Если создать его с нуля, придётся дублировать код:
+
+```python
+class Employee:
+    def __init__(self, name):
+        self.__name = name
+
+    @property
+    def name(self):
+        return self.__name
+
+    def display_info(self):
+        print(f"Name: {self.__name}")
+
+    def work(self):
+        print(f"{self.name} works")
+```
+
+Проблема: код класса `Employee` почти полностью повторяет `Person`, добавляя только метод `work()`.
+
+## Решение: наследование
+
+Лучше унаследовать `Employee` от `Person`, чтобы не дублировать функциональность.
+
+```python
+class Person:
+    def __init__(self, name):
+        self.__name = name
+
+    @property
+    def name(self):
+        return self.__name
+
+    def display_info(self):
+        print(f"Name: {self.__name}")
+
+class Employee(Person):          # наследование
+    def work(self):
+        print(f"{self.name} works")
+
+# Использование
+tom = Employee("Tom")
+print(tom.name)        # Tom
+tom.display_info()     # Name: Tom
+tom.work()             # Tom works
+```
+
+Класс `Employee` перенимает весь функционал `Person` (конструктор, свойство `name`, метод `display_info`), добавляя только метод `work()`.
+
+## Важное замечание
+
+Приватные атрибуты (с двумя подчёркиваниями, например `__name`) **не наследуются** и остаются недоступными в подклассе. Попытка обратиться к `self.__name` из метода `work()` вызовет ошибку:
+
+```python
+def work(self):
+    print(f"{self.__name} works")   # Ошибка!
+```
 
 
 
