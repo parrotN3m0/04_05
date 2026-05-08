@@ -19,6 +19,19 @@
 
 **Цель:** убедиться, что ни баланс, ни владелец, ни пин нельзя прочитать или изменить напрямую.
 
+```
+Счёт: owner="Иван", balance=1000, pin="1234"
+
+1. acc.__balance                         → AttributeError
+2. acc.deposit(500, "1234")              → "Пополнено на 500. Новый баланс: 1500"
+3. acc.withdraw(200, "1234")             → "Снято 200. Остаток: 1300"
+4. acc.get_balance("1234")               → 1300
+5. acc.deposit(100, "0000")              → "Неверный пин-код"
+6. acc.withdraw(500, "1111")             → "Неверный пин-код"
+7. acc.deposit(-50, "1234")              → "Сумма должна быть положительной"
+8. acc.withdraw(2000, "1234")            → "Недостаточно средств"
+```
+
 ---
 
 ### Задача 2. Термометр с историей (инкапсуляция + property)
@@ -35,7 +48,17 @@
 - Публичный метод `get_history()` – возвращает копию истории (чтобы внешний код не мог её изменить).
 
 **Цель:** скрыть историю и прямой доступ к `__celsius`, но предоставить контролируемый интерфейс через property.
+```
+Термометр: celsius=25
 
+1. t.celsius                              → 25
+2. t.fahrenheit                           → 77.0
+3. t.celsius = 30                         → celsius=30, fahrenheit=86.0, история [25,30]
+4. t.celsius = -300                       → "Ошибка: ниже абсолютного нуля", значение 30
+5. t.__celsius                            → AttributeError
+6. t.get_history()                        → [25, 30]
+7. hist = t.get_history(); hist.append(999); t.get_history() → [25, 30]
+```
 ---
 
 ## Задачи на наследование 
@@ -52,6 +75,16 @@
 Добавьте в каждый класс метод `move()`, который возвращает способ передвижения (у собак – "runs", у кошек – "walks silently", у коров – "walks slowly"). В базовом классе `move()` может быть абстрактным или возвращать "moves".
 
 **Требование:** создать список из разных животных и в цикле вызвать у каждого `make_sound()` и `move()`.
+```
+1. Dog().make_sound()   → "Woof! Woof!"
+2. Dog().move()         → "runs"
+3. Cat().make_sound()   → "Meow!"
+4. Cat().move()         → "walks silently"
+5. Cow().make_sound()   → "Moo!"
+6. Cow().move()         → "walks slowly"
+7. Animal().make_sound()→ "Some animal sound"
+8. Animal().move()      → "moves"
+```
 
 ---
 
@@ -71,53 +104,6 @@
 - Переопределяет `honk()` – возвращает `"Beep! (louder)"`.
 - Добавляет метод `wheelie()`.
 
----
-# Тестирующие примеры
-
-##  Задача 1. Банковский счёт
-
-```
-Счёт: owner="Иван", balance=1000, pin="1234"
-
-1. acc.__balance                         → AttributeError
-2. acc.deposit(500, "1234")              → "Пополнено на 500. Новый баланс: 1500"
-3. acc.withdraw(200, "1234")             → "Снято 200. Остаток: 1300"
-4. acc.get_balance("1234")               → 1300
-5. acc.deposit(100, "0000")              → "Неверный пин-код"
-6. acc.withdraw(500, "1111")             → "Неверный пин-код"
-7. acc.deposit(-50, "1234")              → "Сумма должна быть положительной"
-8. acc.withdraw(2000, "1234")            → "Недостаточно средств"
-```
-
-##  Задача 2. Термометр
-
-```
-Термометр: celsius=25
-
-1. t.celsius                              → 25
-2. t.fahrenheit                           → 77.0
-3. t.celsius = 30                         → celsius=30, fahrenheit=86.0, история [25,30]
-4. t.celsius = -300                       → "Ошибка: ниже абсолютного нуля", значение 30
-5. t.__celsius                            → AttributeError
-6. t.get_history()                        → [25, 30]
-7. hist = t.get_history(); hist.append(999); t.get_history() → [25, 30]
-```
-
-##  Задача 3. Животные
-
-```
-1. Dog().make_sound()   → "Woof! Woof!"
-2. Dog().move()         → "runs"
-3. Cat().make_sound()   → "Meow!"
-4. Cat().move()         → "walks silently"
-5. Cow().make_sound()   → "Moo!"
-6. Cow().move()         → "walks slowly"
-7. Animal().make_sound()→ "Some animal sound"
-8. Animal().move()      → "moves"
-```
-
-## Задача 4. Транспорт
-
 ```
 Car("Toyota", 180, 4)
 
@@ -132,3 +118,5 @@ Motorcycle("Harley", 120, False)
 6. bike.wheelie()       → "Doing a wheelie!"
 7. bike.open_trunk()    → AttributeError
 ```
+
+---
